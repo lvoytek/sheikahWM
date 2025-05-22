@@ -8,7 +8,8 @@ include(FindPkgConfig)
 pkg_check_modules(MIRAL miral REQUIRED)
 pkg_check_modules(XKBCOMMON xkbcommon REQUIRED)
 
-add_executable(sheikahWM sheikah_main.cpp)
+add_executable(sheikahWM sheikah_main.cpp
+        sheikah_windowmanager.h)
 
 target_include_directories(sheikahWM PUBLIC SYSTEM ${MIRAL_INCLUDE_DIRS})
 target_link_libraries(sheikahWM ${MIRAL_LDFLAGS})
