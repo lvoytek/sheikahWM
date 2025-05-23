@@ -9,7 +9,8 @@ pkg_check_modules(MIRAL miral REQUIRED)
 pkg_check_modules(XKBCOMMON xkbcommon REQUIRED)
 
 add_executable(sheikahWM SheikahWM.cpp
-        WindowManager.h)
+        WindowManager.h WindowManager.cpp
+)
 
 target_include_directories(sheikahWM PUBLIC SYSTEM ${MIRAL_INCLUDE_DIRS})
 target_link_libraries(sheikahWM ${MIRAL_LDFLAGS})

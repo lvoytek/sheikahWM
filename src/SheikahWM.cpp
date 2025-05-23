@@ -16,14 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <miral/minimal_window_manager.h>
 #include <miral/runner.h>
 #include <miral/set_window_management_policy.h>
+
+#include "WindowManager.h"
 
 using namespace miral;
 
 int main(int argc, char const *argv[]) {
   MirRunner runner{argc, argv};
+  sheikah::WindowManagerObserver window_manager_observer{};
+  DisplayConfiguration display_config{runner};
 
-  return runner.run_with({set_window_management_policy<MinimalWindowManager>()});
+  return runner.run_with({
+      display_config,
+      set_window_management_policy<sheikah::WindowManager>(window_manager_observer, display_config)
+  });
 }

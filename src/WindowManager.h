@@ -16,9 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SHEIKAH_WINDOWMANAGER_H
-#define SHEIKAH_WINDOWMANAGER_H
+#ifndef WINDOWMANAGER_H
+#define WINDOWMANAGER_H
 
+#include <miral/display_configuration.h>
+#include <miral/minimal_window_manager.h>
 
+namespace sheikah {
+class WindowManagerObserver {
+public:
+  WindowManagerObserver() = default;
+  void add_window_opened_callback(std::function<void()> const &callback);
+  void add_window_closed_callback(std::function<void()> const &callback);
 
-#endif  // SHEIKAH_WINDOWMANAGER_H
+private:
+  friend class WindowManager;
+
+  void process_window_opened_callbacks() const;
+  void process_window_closed_callbacks() const;
+
+  std::vector<std::function<void()>> window_opened_callbacks;
+  std::vector<std::function<void()>> window_closed_callbacks;
+};
+
+class WindowManager : public miral::MinimalWindowManager {
+public:
+  using MinimalWindowManager::MinimalWindowManager;
+  WindowManager(miral::WindowManagerTools const &tools,
+                WindowManagerObserver &window_manager_observer,
+                miral::DisplayConfiguration const &display_config);
+
+  void handle_layout(
+      miral::WindowSpecification &spec,
+      miral::Application const &application_info,
+      miral::WindowInfo &info);
+
+  auto place_new_window(miral::ApplicationInfo const &app_info, miral::WindowSpecification const &request)
+    -> miral::WindowSpecification override;
+
+private:
+  WindowManagerObserver const &window_manager_observer;
+  miral::DisplayConfiguration display_config;
+};
+}
+#endif //WINDOWMANAGER_H
